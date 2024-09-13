@@ -46,13 +46,13 @@ int main(int, char**){
 
 
     if ((chas % 10 == Ok_Chas_Minuta) && chas != iskl_ok_chasa_minut){
-        std::cout << chas<< " час";
+        std::cout << chas<< " час ";
     }
     else if((chas>Min_Ok_Chasa && chas < Max_Ok_Chasa)  || chas == ZeroChasov){
-        std::cout << chas << " часов";
+        std::cout << chas << " часов ";
     }
     else{
-        std::cout << chas << " часа";
+        std::cout << chas << " часа ";
     }
 
     if (minut != Min_Pold){
