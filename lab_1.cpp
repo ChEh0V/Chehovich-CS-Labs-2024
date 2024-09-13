@@ -1,8 +1,5 @@
 #include <iostream>
-int main(int, char**){
-
-    //Переменные
-
+int main(int, char**) {
     int chas;
     int minut;
 
@@ -31,58 +28,67 @@ int main(int, char**){
 
     std::cin >> chas >> minut;
 
-    if (chas > Max_Chas || minut > Max_Minut || chas < Min_Poln || minut < Chas_Poln){
-        std::cout << "В воде ошибка, введите время в формате 0 <= часы <= 24 и 0 <= минуты <= 60";
+    if (chas > Max_Chas || minut > Max_Minut || chas < Min_Poln || minut < Chas_Poln) {
+        std::cout << "В воде ошибка, введите время в формате 0 <= часы <= 24 и 0 <= минуты <= 60\n";
         return 0;
     }
-    if (chas == Chas_Poln && minut == Min_Poln){
+
+    if (chas == Chas_Poln && minut == Min_Poln) {
         std::cout << "полночь ";
         return 0;
     }
-    else if(chas == Chas_Pold && minut == Min_Pold){
+
+    else if (chas == Chas_Pold && minut == Min_Pold) {
         std::cout << "полдень";
         return 0;
     }
 
-
-    if ((chas % 10 == Ok_Chas_Minuta) && chas != iskl_ok_chasa_minut){
-        std::cout << chas<< " час ";
+    if ((chas % 10 == Ok_Chas_Minuta) && chas != iskl_ok_chasa_minut) {
+        std::cout << chas << " час ";
     }
-    else if((chas>Min_Ok_Chasa && chas < Max_Ok_Chasa)  || chas == ZeroChasov){
+
+    else if ((chas > Min_Ok_Chasa && chas < Max_Ok_Chasa) || chas == ZeroChasov) {
         std::cout << chas << " часов ";
     }
-    else{
+
+    else {
         std::cout << chas << " часа ";
     }
 
-    if (minut != Min_Pold){
-        if ((minut % 10 == Ok_Chas_Minuta) && minut != iskl_ok_chasa_minut){
+    if (minut != Min_Pold) {
+        if ((minut % 10 == Ok_Chas_Minuta) && minut != iskl_ok_chasa_minut) {
             std::cout << minut << " минута";
         }
-        else if(minut % 10 >= Min_Ok_Minuti && minut % 10 <= Max_Ok_minuti  && minut / 10 != iskl_minuti){
+
+        else if (minut % 10 >= Min_Ok_Minuti && minut % 10 <= Max_Ok_minuti && minut / 10 != iskl_minuti) {
             std::cout << minut << " минуты";
         }
-        else{
+
+        else {
             std::cout << minut << " минут";
         }
     }
 
-    if (chas >= Ytro && chas < Den){
+    if (chas >= Ytro && chas < Den) {
         std::cout << " утра";
     }
-    else if(chas > Den && chas < Vecher){
+
+    else if (chas > Den && chas < Vecher) {
         std::cout << " дня";
     }
-    else if(chas >= Vecher && chas <= Vechte2){
+
+    else if (chas >= Vecher && chas <= Vechte2) {
         std::cout << " вечера";
     }
-    else if(chas > Noch && chas < Ytro){
+
+    else if (chas > Noch && chas < Ytro) {
         std::cout << " ночи";
     }
 
-    if (minut == Min_Pold){
+    if (minut == Min_Pold) {
         std::cout << " ровно";
     }
-    std::cout<<"\n";
+
+    std::cout << "\n";
     return 0;
 }
