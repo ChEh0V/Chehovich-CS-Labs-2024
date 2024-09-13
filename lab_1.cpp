@@ -1,7 +1,7 @@
 #include <iostream>
 int main(int, char**) {
-    int chas;
-    int minut;
+    int chas{};
+    int minut{};
 
     const int Min_Poln = 0;
     const int Chas_Poln = 0;
@@ -19,6 +19,7 @@ int main(int, char**) {
     const int Chas_Pold = 12;
     const int Min_Pold = 0;
     const int ZeroChasov = 0;
+    const int PeremDlyOstatk = 10;
 
     const int Noch = 0;
     const int Ytro = 5;
@@ -43,7 +44,7 @@ int main(int, char**) {
         return 0;
     }
 
-    if ((chas % 10 == Ok_Chas_Minuta) && chas != iskl_ok_chasa_minut) {
+    if ((chas % PeremDlyOstatk == Ok_Chas_Minuta) && chas != iskl_ok_chasa_minut) {
         std::cout << chas << " час ";
     }
 
@@ -56,11 +57,11 @@ int main(int, char**) {
     }
 
     if (minut != Min_Pold) {
-        if ((minut % 10 == Ok_Chas_Minuta) && minut != iskl_ok_chasa_minut) {
+        if ((minut % PeremDlyOstatk == Ok_Chas_Minuta) && minut != iskl_ok_chasa_minut) {
             std::cout << minut << " минута";
         }
 
-        else if (minut % 10 >= Min_Ok_Minuti && minut % 10 <= Max_Ok_minuti && minut / 10 != iskl_minuti) {
+        else if (minut % PeremDlyOstatk >= Min_Ok_Minuti && minut % PeremDlyOstatk <= Max_Ok_minuti && minut / PeremDlyOstatk != iskl_minuti) {
             std::cout << minut << " минуты";
         }
 
