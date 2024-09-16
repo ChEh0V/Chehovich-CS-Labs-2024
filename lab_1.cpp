@@ -71,19 +71,19 @@ int main(int, char**) {
     }
 
     if (chas >= Ytro && chas < Den) {
-        std::cout << " утра";
+        std::cout << "утра";
     }
 
     else if (chas > Den && chas < Vecher) {
-        std::cout << " дня";
+        std::cout << "дня";
     }
 
     else if (chas >= Vecher && chas <= Vechte2) {
-        std::cout << " вечера";
+        std::cout << "вечера";
     }
 
     else if (chas > Noch && chas < Ytro) {
-        std::cout << " ночи";
+        std::cout << "ночи";
     }
 
     if (minut == Min_Pold) {
