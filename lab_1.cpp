@@ -1,145 +1,89 @@
 #include <iostream>
+
+namespace {
+const int kTimeHourMidDay = 12;
+const int kTimeMinuteMidDay = 0;
+const int kMinuteMidNight = 0;
+const int kHourMidNight = 0;
+const int kMaxQuantityHour = 23;
+const int kMaxQuantityMinut = 59;
+
+const int kForEndingHourNominativeSingularCase = 1;
+const int kForEndingMinuteNominativeSingularCase = 1;
+const int kMinEndingMinuteNominativeCasePlural = 2;
+const int kMaxEndingMinuteNominativeCasePlural = 4;
+
+const int kMinValueForPluarGenitiveCase = 4;
+const int kMaxValueForPluarGenitiveCase = 21;
+
+const int kExceptionEndingHourAndMinutTheGenitivePlural = 11;
+const int kExceptionMinuteNominativeCaseSingular = 1;
+const int kExceptionForHourGenitiveOfPlural = 0;
+
+const int kDecimalBase = 10;
+const int kForFindTimePostMeridiem = 12;
+
+const int kStartNight = 0;
+const int kStartMorning = 5;
+const int kStartDay = 12;
+const int kStartEvening = 18;
+const int kFinishEvening = 23;
+}  // namespace
+
 int main(int, char**) {
-    int chas{};
-    int minut{};
-
-    const int Minut_Poln = 0;
-    const int Chas_Poln = 0;
-    const int Max_Chas = 23;
-    const int Max_Minut = 59;
-    const int Ok_Chas_Minuta = 1;
-
-    const int Min_Okonch_Chasa = 4;
-    const int Max_Okonch_Chasa = 21;
-    const int Iskl_Okonch_Chasa_Minut = 11;
-    const int Min_Okonch_Minuti = 2;
-    const int Max_Okonch_minuti = 4;
-
-    const int iskl_minuti = 1;
-    const int Chas_Pold = 12;
-    const int Min_Pold = 0;
-    const int ZeroChasov = 0;
-    const int PeremDlyOstatk = 10;
-
-    const int Noch = 0;
-    const int Ytro = 5;
-    const int Den = 12;
-    const int Vecher = 18;
-    const int Vechte2 = 23;
-
-    const int ChasDnya = 13;
-    const int DvaDnya = 14;
-    const int TriDnya = 15;
-    const int ChetVecher = 16;
-    const int PyatVecher = 17;
-    const int SixVecher = 18;
-
-    const int SevenVecher = 19;
-    const int VosemVecher = 20;
-    const int DevyatVecher = 21;
-    const int DecVecher = 22;
-    const int OdinVecher = 23;
-
+    int hour = 0;
+    int hourNight = 0;
+    int minute = 0;
     std::cout << "Введите время в формате 0 <= часы < 24 и 0 <= минуты < 60\n";
-    std::cin >> chas >> minut;
+    std::cin >> hour >> minute;
 
-    if (chas > Max_Chas || minut > Max_Minut || chas <= Minut_Poln || minut <= Chas_Poln) {
+    if (hour > kMaxQuantityHour || minute > kMaxQuantityMinut || hour < kHourMidNight || minute < kMinuteMidNight) {
         std::cout << "В воде ошибка, введите время в формате 0 <= часы < 24 и 0 <= минуты < 60\n";
         return 0;
     }
 
-    if (chas == Chas_Poln && minut == Minut_Poln) {
-        std::cout << "полночь ";
+    if (hour == kHourMidNight && minute == kMinuteMidNight) {
+        std::cout << "полночь\n";
+        return 0;
+    } else if (hour == kTimeHourMidDay && minute == kTimeMinuteMidDay) {
+        std::cout << "полдень\n";
         return 0;
     }
 
-    else if (chas == Chas_Pold && minut == Min_Pold) {
-        std::cout << "полдень";
-        return 0;
-    }
-
-    if (chas >= Den) {
-        switch (chas) {
-            case ChasDnya:
-                std::cout << "1 час ";
-                break;
-            case DvaDnya:
-                std::cout << "2 часа ";
-                break;
-            case TriDnya:
-                std::cout << "3 часа ";
-                break;
-            case ChetVecher:
-                std::cout << "4 часа ";
-                break;
-            case PyatVecher:
-                std::cout << "5 часов ";
-                break;
-            case SixVecher:
-                std::cout << "6 часов ";
-                break;
-            case SevenVecher:
-                std::cout << "7 часов ";
-                break;
-            case VosemVecher:
-                std::cout << "8 часов ";
-                break;
-            case DevyatVecher:
-                std::cout << "9 часов ";
-                break;
-            case DecVecher:
-                std::cout << "10 часов ";
-                break;
-            case OdinVecher:
-                std::cout << "11 часов ";
-                break;
+    if (hour != kTimeHourMidDay) {
+        hourNight = hour % kForFindTimePostMeridiem;
+        if ((hourNight % kDecimalBase == kForEndingHourNominativeSingularCase) && hourNight != kExceptionEndingHourAndMinutTheGenitivePlural) {
+            std::cout << hourNight << " час ";
+        } else if ((hourNight > kMinValueForPluarGenitiveCase && hourNight < kMaxValueForPluarGenitiveCase) || hourNight == kExceptionForHourGenitiveOfPlural) {
+            std::cout << hourNight << " часов ";
+        } else {
+            std::cout << hourNight << " часа ";
         }
     } else {
-        if ((chas % PeremDlyOstatk == Ok_Chas_Minuta) && chas != Iskl_Okonch_Chasa_Minut) {
-            std::cout << chas << " час ";
-        }
+        std::cout << "12 часов ";
+    }
 
-        else if ((chas > Min_Okonch_Chasa && chas < Max_Okonch_Chasa) || chas == ZeroChasov) {
-            std::cout << chas << " часов ";
-        }
-
-        else {
-            std::cout << chas << " часа ";
+    if (minute != kTimeMinuteMidDay) {
+        if ((minute % kDecimalBase == kForEndingMinuteNominativeSingularCase) && minute != kExceptionEndingHourAndMinutTheGenitivePlural) {
+            std::cout << minute << " минута ";
+        } else if (minute % kDecimalBase >= kMinEndingMinuteNominativeCasePlural && minute % kDecimalBase <= kMaxEndingMinuteNominativeCasePlural && minute / kDecimalBase != kExceptionMinuteNominativeCaseSingular) {
+            std::cout << minute << " минуты ";
+        } else {
+            std::cout << minute << " минут ";
         }
     }
 
-    if (minut != Min_Pold) {
-        if ((minut % PeremDlyOstatk == Ok_Chas_Minuta) && minut != Iskl_Okonch_Chasa_Minut) {
-            std::cout << minut << " минута ";
-        }
-
-        else if (minut % PeremDlyOstatk >= Min_Okonch_Minuti && minut % PeremDlyOstatk <= Max_Okonch_minuti &&
-                 minut / PeremDlyOstatk != iskl_minuti) {
-            std::cout << minut << " минуты ";
-        }
-
-        else {
-            std::cout << minut << " минут ";
-        }
-    }
-
-    if (chas >= Ytro && chas < Den) {
+    if (hour >= kStartMorning && hour < kStartDay) {
         std::cout << "утра";
-    }
-
-    else if (chas > Den && chas < Vecher) {
+    } else if (hour >= kStartDay && hour < kStartEvening) {
         std::cout << "дня";
-    }
-
-    else if (chas >= Vecher && chas <= Vechte2) {
+    } else if (hour >= kStartEvening && hour <= kFinishEvening) {
         std::cout << "вечера";
-    }
-
-    else if (chas > Noch && chas < Ytro) {
+    } else if (hour > kStartNight && hour < kStartMorning) {
         std::cout << "ночи";
     }
 
-    if (minut == Min_Pold) {
+    if (minute == kTimeMinuteMidDay) {
         std::cout << " ровно";
     }
 
