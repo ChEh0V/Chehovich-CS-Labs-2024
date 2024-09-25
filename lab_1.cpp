@@ -6,7 +6,7 @@ const int kTimeMinuteMidDay = 0;
 const int kMinuteMidNight = 0;
 const int kHourMidNight = 0;
 const int kMaxQuantityHour = 23;
-const int kMaxQuantityMinut = 59;
+const int kMaxQuantityMinute = 59;
 
 const int kForEndingHourNominativeSingularCase = 1;
 const int kForEndingMinuteNominativeSingularCase = 1;
@@ -19,7 +19,6 @@ const int kMaxValueForPluarGenitiveCase = 21;
 const int kExceptionEndingHourAndMinutTheGenitivePlural = 11;
 const int kExceptionMinuteNominativeCaseSingular = 1;
 const int kExceptionForHourGenitiveOfPlural = 0;
-
 const int kDecimalBase = 10;
 const int kForFindTimePostMeridiem = 12;
 
@@ -37,7 +36,7 @@ int main(int, char**) {
     std::cout << "Введите время в формате 0 <= часы < 24 и 0 <= минуты < 60\n";
     std::cin >> hour >> minute;
 
-    if (hour > kMaxQuantityHour || minute > kMaxQuantityMinut || hour < kHourMidNight || minute < kMinuteMidNight) {
+    if (hour > kMaxQuantityHour || minute > kMaxQuantityMinute || hour < kHourMidNight || minute < kMinuteMidNight) {
         std::cout << "В воде ошибка, введите время в формате 0 <= часы < 24 и 0 <= минуты < 60\n";
         return 0;
     }
@@ -54,7 +53,8 @@ int main(int, char**) {
         hourNight = hour % kForFindTimePostMeridiem;
         if ((hourNight % kDecimalBase == kForEndingHourNominativeSingularCase) && hourNight != kExceptionEndingHourAndMinutTheGenitivePlural) {
             std::cout << hourNight << " час ";
-        } else if ((hourNight > kMinValueForPluarGenitiveCase && hourNight < kMaxValueForPluarGenitiveCase) || hourNight == kExceptionForHourGenitiveOfPlural) {
+        } else if ((hourNight > kMinValueForPluarGenitiveCase && hourNight < kMaxValueForPluarGenitiveCase) ||
+                   hourNight == kExceptionForHourGenitiveOfPlural) {
             std::cout << hourNight << " часов ";
         } else {
             std::cout << hourNight << " часа ";
@@ -66,7 +66,8 @@ int main(int, char**) {
     if (minute != kTimeMinuteMidDay) {
         if ((minute % kDecimalBase == kForEndingMinuteNominativeSingularCase) && minute != kExceptionEndingHourAndMinutTheGenitivePlural) {
             std::cout << minute << " минута ";
-        } else if (minute % kDecimalBase >= kMinEndingMinuteNominativeCasePlural && minute % kDecimalBase <= kMaxEndingMinuteNominativeCasePlural && minute / kDecimalBase != kExceptionMinuteNominativeCaseSingular) {
+        } else if (minute % kDecimalBase >= kMinEndingMinuteNominativeCasePlural && minute % kDecimalBase <= kMaxEndingMinuteNominativeCasePlural &&
+                   minute / kDecimalBase != kExceptionMinuteNominativeCaseSingular) {
             std::cout << minute << " минуты ";
         } else {
             std::cout << minute << " минут ";
