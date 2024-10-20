@@ -69,7 +69,7 @@ int main(int, char**) {
         if (lastDigitMinutes == kMinutesNominativeSingular && minutes != kMinutesGenitivePluralBegin) {
             std::cout << minutes << " минута ";
         } else if (lastDigitMinutes >= kMinutesNominativePluralBegin && lastDigitMinutes <= kMinutesNominativePluralEnd &&
-                    dozensMinutes != kMinutesGenitivePlural) {
+                   dozensMinutes != kMinutesGenitivePlural) {
             std::cout << minutes << " минуты ";
         } else {
             std::cout << minutes << " минут ";
