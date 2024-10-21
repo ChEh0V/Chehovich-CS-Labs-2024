@@ -70,8 +70,8 @@ void Task3() {
     double resultY{};
 
     std::cout << std::fixed << std::setprecision(kColumnWidthArgument);
-    std::cout << std::setw(kColumnWidthArgument) << "X" << " " << std::setw(kColumnWidthFunctionValue) << "Y(X)" << " " <<
-    std::setw(kColumnWidthFunctionValue) << "S(X)" << " " << std::setw(kColumnWidthArgument) << "N" << std::endl;
+    std::cout << std::setw(kColumnWidthArgument) << "X" << " " << std::setw(kColumnWidthFunctionValue) << "Y(X)" << " "
+              << std::setw(kColumnWidthFunctionValue) << "S(X)" << " " << std::setw(kColumnWidthArgument) << "N" << std::endl;
 
     double x = 0.;
     while (x <= 1) {
@@ -86,8 +86,8 @@ void Task3() {
         }
         memberSequence = 1;
         resultY = std::exp(-(x * x));
-        std::cout << std::setw(kColumnWidthArgument) << x << " " << std::setw(kColumnWidthFunctionValue)
-        << resultY << " " << std::setw(kColumnWidthFunctionValue) << resultS << " " << std::setw(kColumnWidthArgument) << n + 1 << std::endl;
+        std::cout << std::setw(kColumnWidthArgument) << x << " " << std::setw(kColumnWidthFunctionValue) << resultY << " "
+                  << std::setw(kColumnWidthFunctionValue) << resultS << " " << std::setw(kColumnWidthArgument) << n + 1 << std::endl;
 
         x += kStepTask3;
     }
