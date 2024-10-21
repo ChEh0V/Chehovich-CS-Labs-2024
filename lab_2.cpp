@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace {
-const double kDividerFirstTask = 5;
+const int kDividerFirstTask = 5;
 
 const int kInitialData = 2;
 const int kAPositiveTask2Begin = 2;
@@ -15,6 +15,9 @@ const int kStepAPositiveTask2 = 2;
 
 const double kStepTask3 = 0.2;
 const double accuracy = 1e-6;
+
+const int kColumnWidthArgument = 5;
+const int kColumnWidthFunctionValue = 10;
 
 const int kN3Task4 = 3;
 const int kN5Task4 = 5;
@@ -31,8 +34,8 @@ void Task1() {
         std::cout << "Введены неверные данные" << std::endl;
         return;
     }
-    for (int i = 5; i <= finishForTask; i += 5) {
-        if ((i % 5 == 0) && (fmod(i, divider) != 0)) {
+    for (int i = kDividerFirstTask; i <= finishForTask; i += kDividerFirstTask) {
+        if ((i % kDividerFirstTask == 0) && (fmod(i, divider) != 0)) {
             sumNaturalNmb += i;
         }
     }
@@ -58,15 +61,18 @@ void Task2() {
     std::cout << product << std::endl;
 }
 
-double SearchMember(double x, double lastMember, unsigned int n) {
+double SearchMember(double x, double lastMember, double n) {
     return lastMember * (-x * x / (n + 1));
 }
 
 void Task3() {
     double memberSequence = 1;
     double resultY{};
-    std::cout << std::fixed << std::setprecision(6);
-    std::cout << std::setw(5) << "X" << " " << std::setw(10) << "Y(X)" << " " << std::setw(10) << "S(X)" << " " << std::setw(5) << "N" << std::endl;
+
+    std::cout << std::fixed << std::setprecision(kColumnWidthArgument);
+    std::cout << std::setw(kColumnWidthArgument) << "X" << " " << std::setw(kColumnWidthFunctionValue) << "Y(X)" << " " <<
+    std::setw(kColumnWidthFunctionValue) << "S(X)" << " " << std::setw(kColumnWidthArgument) << "N" << std::endl;
+
     double x = 0.;
     while (x <= 1) {
         double n = 0.;
@@ -80,8 +86,9 @@ void Task3() {
         }
         memberSequence = 1;
         resultY = std::exp(-(x * x));
-        std::cout << std::setw(5) << x << " " << std::setw(10) << resultY << " " << std::setw(10) << resultS << " " << std::setw(5) << n + 1
-                  << std::endl;
+        std::cout << std::setw(kColumnWidthArgument) << x << " " << std::setw(kColumnWidthFunctionValue)
+        << resultY << " " << std::setw(kColumnWidthFunctionValue) << resultS << " " << std::setw(kColumnWidthArgument) << n + 1 << std::endl;
+
         x += kStepTask3;
     }
 }
