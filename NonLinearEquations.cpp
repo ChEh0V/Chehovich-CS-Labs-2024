@@ -1,160 +1,181 @@
 #include "NonLinearEquations.hpp"
+
 #include <cmath>
+#include <iomanip>
 #include <iostream>
 
-void interface::ChooseSolution() {
-    int task{};
+namespace {
+const int kMaxIterations = 1e5;
 
+struct ReadInput {
+    double ratio = 0.;
+    double acccuacy = 0.;
+};
+
+[[nodiscard]] ReadInput InputCofficientAccuracy() {
+    double ratio = 0.;
+    double accuracy = 0.;
+
+    std::cout << "Введите коэффициент A для уравнения x - A * cos(x) = 0: " << std::endl;
+    std::cin >> ratio;
+    std::cout << std::endl;
+    std::cout << "Введите погрешность(D вормате 1e-n): " << std::endl;
+    std::cin >> accuracy;
+    std::cout << std::endl;
+    return {ratio, accuracy};
+}
+
+void PrintResult(double accuracy, double root, int countIterations, bool solved) {
+    if (solved) {
+        int outputAcc = -static_cast<int>(std::ceil(std::log10(accuracy)));
+        std::cout << "X = " << std::setw(outputAcc) << std::setprecision(outputAcc) << std::fixed << root << " - корень уравнения" << std::endl;
+        std::cout << "Количество итераций:" << countIterations << std::endl;
+    } else {
+        std::cout << "Корней не найдено" << std::endl;
+    }
+}
+
+[[nodiscard]] double CalculateFunction(double root, double ratio) {
+    return root - ratio * std::cos(root);
+}
+
+[[nodiscard]] double CalculateDerrivative(double root, double ratio) {
+    return 1 + ratio * std::sin(root);
+}
+
+[[nodiscard]] bool CheckRootSign(double root) {
+    if (root >= 0.) {
+        return true;
+    } else {
+        return false;
+    }
+}
+}  // namespace
+
+int TextMenu() {
     std::cout << "Выберите способ решения уранения x - A * cos(x) = 0:" << std::endl;
     std::cout << "1 - Способ методом итераций" << std::endl;
     std::cout << "2 - Методом Ньютона" << std::endl;
     std::cout << "3 - Методом половинного деления" << std::endl;
+    int task{};
     std::cin >> task;
+    return task;
+}
 
-    switch (static_cast<interface::Method>(task)){
-        case interface::Method::Iterative:
+namespace NonLinearEquations {
+void ChooseSolution() {
+    int task{};
+    task = TextMenu();
+    switch (static_cast<EquationMethod>(task)) {
+        case EquationMethod::Iterative:
             IterationMethod();
             break;
-        case interface::Method::Newton:
+        case EquationMethod::Newton:
             NewtonMethod();
             break;
-        case interface::Method::HalfDivision:
+        case EquationMethod::HalfDivision:
             MethodHalfDivision();
             break;
     }
 }
 
-void interface::TaskStart() {
+void TaskStart() {
     char continueExecution = 'y';
 
     while (continueExecution == 'y') {
         ChooseSolution();
-        std::cout << "Введите 'y', если хотите продолжить работу, и 'n', если нет" << std::endl;
+        std::cout << "Введите 'y', если хотите продолжить работу, и 'n', если нет" << std::endl;  // func()
         std::cin >> continueExecution;
     }
 }
 
-[[nodiscard]] double interface::SearchRootIterativeMethod(double ratio, double accuracy, int& countIterations) {
+rootCalculationResult SearchRootIterativeMethod(double ratio, double accuracy) {
     double previousRoot = 0.;
     double currentRoot = ratio * std::cos(previousRoot);
+    int countIterations = 0;
     ++countIterations;
-    int maxIterations = 1e5;
+    bool solved = true;
 
-    while (std::fabs(currentRoot - previousRoot) > accuracy && countIterations < maxIterations) {
+    while (std::fabs(currentRoot - previousRoot) > accuracy && countIterations < kMaxIterations) {
         previousRoot = currentRoot;
         currentRoot = ratio * std::cos(previousRoot);
         ++countIterations;
     }
 
-    return currentRoot;
-}
-
-void interface::IterationMethod() {
-    double ratio = 0.;
-    double accuracy = 1e-6;
-    double root = 0.;
-    int countIterations = 0;
-
-    std::cout << "Введите коэффициент А при cos(x)" << std::endl;
-    std::cin >> ratio;
-    std::cout << std::endl;
-    std::cout << "Введите погрешность:" << std::endl;
-    std::cin >> accuracy;
-    std::cout << std::endl;
-
-    root = SearchRootIterativeMethod(ratio, accuracy, countIterations);
-
-    std::cout << "X = " << root << " - корень уравнения" << std::endl;
-    std::cout << "В котором " << countIterations << " итераций" << std::endl;
-    std::cout << std::endl;
-}
-
-[[nodiscard]] double CalculateFunction(double ratio, double root) {
-    return root - ratio * cos(root);
-}
-[[nodiscard]] double CalculateDerrivative(double ratio, double root) {
-    return 1 + ratio * sin(root);
-}
-
-[[nodiscard]] double interface::SearchRootNewtonMethod(double ratio, double accuracy, int& countIterations) {
-    double xPrevious{};
-    double root = 0.;
-    int kMaxIterations = 1e5;
-    while (std::fabs(root - xPrevious) > accuracy && countIterations < kMaxIterations) {
-        ++countIterations;
-        xPrevious = root;
-        root -= CalculateFunction(ratio, root) / CalculateDerrivative(ratio, root);
+    if (CalculateFunction(currentRoot, ratio) > accuracy && kMaxIterations == countIterations) {
+        return {.solved = false};
     }
-
-    if (std::fabs(CalculateFunction(ratio, root)) > accuracy) {
-        root = NAN;
-    }
-
-    return root;
+    return {currentRoot, countIterations, solved};
 }
 
-void interface::NewtonMethod() {
-    double a = 0.;
-    double accuracy = 0.;
-    double root = 0.;
+void IterationMethod() {
+    auto [ratio, accuracy] = InputCofficientAccuracy();
+    auto [root, countIterations, solved] = SearchRootIterativeMethod(ratio, accuracy);
+    PrintResult(accuracy, root, countIterations, solved);
+}
+
+rootCalculationResult SearchRootNewtonMethod(double ratio, double accuracy) {
     int countIterations = 0;
+    double previousX = 0.;
+    bool solved = true;
 
-    std::cout << "Введите коэффициент А при cos(x)" << std::endl;
-    std::cin >> a;
-    std::cout << std::endl;
-    std::cout << "Введите погрешность:" << std::endl;
-    std::cin >> accuracy;
-    std::cout << std::endl;
+    previousX = CalculateFunction(previousX, ratio) / CalculateDerrivative(previousX, ratio);
+    ++countIterations;
 
-    root = SearchRootIterativeMethod(a, accuracy, countIterations);
-
-    std::cout << "X = " << root << " - корень уравнения" << std::endl;
-    std::cout << "В котором " << countIterations << " итераций" << std::endl;
-    std::cout << std::endl;
-}
-
-[[nodiscard]] double interface::SearchRootHalfDivisionMethod(double ratio, double accuracy, int& countIterations, double leftPointer,
-                                                             double rightPointer) {
-    double middle = 0.;
-    if (((leftPointer - ratio * std::cos(leftPointer) > 0) && (rightPointer - ratio * std::cos(rightPointer) > 0)) ||
-        ((leftPointer - ratio * std::cos(leftPointer) < 0) && (rightPointer - ratio * std::cos(rightPointer) < 0))) {
-        std::cout << "На заданном интервале функция не меняет знак. Метод половинного деления не применим." << std::endl;
-    } else {
-        while (fabs(rightPointer - leftPointer) > accuracy) {
-            middle = (leftPointer + rightPointer) / 2;
-            if (middle - ratio * std::cos(middle) > 0) {
-                rightPointer = middle;
-            } else {
-                leftPointer = middle;
-            }
-            countIterations++;
+    while (std::fabs(CalculateFunction(previousX, ratio)) > accuracy && countIterations < kMaxIterations) {
+        double derrivative = CalculateDerrivative(previousX, ratio);
+        if (derrivative == 0.) {
+            break;
         }
+        ++countIterations;
+        previousX -= CalculateFunction(previousX, ratio) / derrivative;
     }
-    return middle;
+    if (CalculateFunction(previousX, ratio) > accuracy && kMaxIterations == countIterations) {
+        return {.solved = false};
+    }
+    return {previousX, countIterations, solved};
 }
 
-void interface::MethodHalfDivision() {
-    double ratio = 0.;
-    double accuracy = 0.;
-    double root = 0.;
+void NewtonMethod() {
+    auto [ratio, accuracy] = InputCofficientAccuracy();
+    auto [root, countIterations, solved] = SearchRootNewtonMethod(ratio, accuracy);
+    PrintResult(accuracy, root, countIterations, solved);
+}
+
+rootCalculationResult SearchRootHalfDivisionMethod(double ratio, double accuracy, double leftBoundary, double rightBoundary) {
+    if (leftBoundary >= rightBoundary) {
+        return {.solved = false};
+    }
     int countIterations = 0;
-    double rightPointer;
-    double leftPointer;
-
-    std::cout << "Введите коэффициент А при cos(x)" << std::endl;
-    std::cin >> ratio;
-
-    std::cout << "Введите левую и првую границу через пробел(Пример: -4 4)" << std::endl;
-    std::cin >> leftPointer >> rightPointer;
-    std::cout << std::endl;
-
-    std::cout << "Введите погрешность:" << std::endl;
-    std::cin >> accuracy;
-    std::cout << std::endl;
-
-    root = SearchRootHalfDivisionMethod(ratio, accuracy, countIterations, leftPointer, rightPointer);
-
-    std::cout << "X = " << root << " - корень уравнения" << std::endl;
-    std::cout << "В котором " << countIterations << " итераций" << std::endl;
-    std::cout << std::endl;
+    double middle = 0.;
+    bool solved = true;
+    while (rightBoundary - leftBoundary > accuracy && countIterations < kMaxIterations) {
+        middle = (leftBoundary + rightBoundary) / 2;
+        if (CheckRootSign(CalculateFunction(middle, ratio)) == CheckRootSign(CalculateFunction(rightBoundary, ratio))) {
+            rightBoundary = middle;
+        } else {
+            leftBoundary = middle;
+        }
+        ++countIterations;
+    }
+    return {((leftBoundary + rightBoundary) / 2), countIterations, solved};
 }
+
+void OutputHalfMetod(double ratio, double accuracy) {
+    double leftBoundary = 0.;
+    double rightBoundary = 0.;
+    std::cout << "Введите лувую и правую границу поиска корня(пример: 1 5)" << std::endl;
+    std::cin >> leftBoundary >> rightBoundary;
+    if (leftBoundary >= rightBoundary) {
+        std::cout << "Введены некорректные значения" << std::endl;
+        return;
+    }
+    auto [root, countIterations, solved] = SearchRootHalfDivisionMethod(ratio, accuracy, leftBoundary, rightBoundary);
+    PrintResult(accuracy, root, countIterations, solved);
+}
+
+void MethodHalfDivision() {
+    auto [ratio, accuracy] = InputCofficientAccuracy();
+    OutputHalfMetod(ratio, accuracy);
+}
+}  // namespace NonLinearEquations
