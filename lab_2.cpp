@@ -30,7 +30,7 @@ void Task1() {
     double sumNaturalNmb = 0;
     std::cout << "Введите натуральные числа n (число до которого будет идти программа) и m (делитель), притом m < n" << std::endl;
     std::cin >> finishForTask >> divider;
-    if (finishForTask <= 0 && divider <= 0) {
+    if (finishForTask <= 0 || divider <= 0  || divider > finishForTask) {
         std::cout << "Введены неверные данные" << std::endl;
         return;
     }
